@@ -1,7 +1,6 @@
 package com.passation.passation_backend.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @Entity
@@ -16,10 +15,8 @@ public class ChecklistTemplate {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
     private String nom;
 
-    @Column(name = "type_poste")
     private String typePoste;
 
     @Column(columnDefinition = "TEXT")

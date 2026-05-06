@@ -1,9 +1,12 @@
 package com.passation.passation_backend.dto;
 
 import com.passation.passation_backend.model.NiveauMaitrise;
-import lombok.Data;
+import lombok.*;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class PassationProjetDTO {
     private Long id;
     private Long passationId;

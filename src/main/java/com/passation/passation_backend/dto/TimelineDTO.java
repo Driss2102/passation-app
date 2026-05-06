@@ -1,11 +1,14 @@
 package com.passation.passation_backend.dto;
 
 import com.passation.passation_backend.model.StatutEtape;
-import lombok.Data;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class TimelineDTO {
     private Long id;
     private Long passationId;

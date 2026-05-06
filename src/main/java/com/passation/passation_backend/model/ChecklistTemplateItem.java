@@ -1,7 +1,6 @@
 package com.passation.passation_backend.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @Entity
@@ -17,15 +16,12 @@ public class ChecklistTemplateItem {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "template_id", nullable = false)
+    @JoinColumn(name = "template_id")
     private ChecklistTemplate template;
 
-    @NotBlank
     private String libelle;
 
-    @Column(nullable = false)
-    private Boolean obligatoire = false;
+    private Boolean obligatoire;
 
-    @Column(nullable = false)
-    private Integer ordre = 0;
+    private Integer ordre;
 }

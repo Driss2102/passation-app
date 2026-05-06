@@ -21,25 +21,21 @@ public class AuditLog {
     @JoinColumn(name = "utilisateur_id")
     private User utilisateur;
 
-    @Column(nullable = false)
     private String action;
 
-    @Column(name = "entite_concernee")
     private String entiteConcernee;
 
-    @Column(name = "entite_id")
     private Long entiteId;
 
-    @Column(name = "ancienne_valeur", columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT")
     private String ancienneValeur;
 
-    @Column(name = "nouvelle_valeur", columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT")
     private String nouvelleValeur;
 
     @Column(name = "date_action", updatable = false)
     private LocalDateTime dateAction;
 
-    @Column(name = "ip_address")
     private String ipAddress;
 
     @PrePersist

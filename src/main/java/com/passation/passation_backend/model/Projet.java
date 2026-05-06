@@ -29,13 +29,10 @@ public class Projet {
     @Column(nullable = false)
     private StatutProjet statut;
 
-    @Column(name = "pourcentage_avancement")
     private Integer pourcentageAvancement;
 
-    @Column(name = "date_debut")
     private LocalDate dateDebut;
 
-    @Column(name = "date_fin_prevue")
     private LocalDate dateFinPrevue;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -48,7 +45,5 @@ public class Projet {
     @PrePersist
     protected void onCreate() {
         dateCreation = LocalDateTime.now();
-        if (pourcentageAvancement == null) pourcentageAvancement = 0;
-        if (statut == null) statut = StatutProjet.PLANIFIE;
     }
 }

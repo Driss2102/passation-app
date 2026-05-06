@@ -16,27 +16,25 @@ public class PassationProjet {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "passation_id", nullable = false)
+    @JoinColumn(name = "passation_id")
     private Passation passation;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "projet_id", nullable = false)
+    @JoinColumn(name = "projet_id")
     private Projet projet;
 
-    @Column(name = "pourcentage_passation")
     private Integer pourcentagePassation;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "niveau_maitrise")
     private NiveauMaitrise niveauMaitrise;
 
-    @Column(name = "sujets_en_cours", columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT")
     private String sujetsEnCours;
 
-    @Column(name = "taches_restantes", columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT")
     private String tachesRestantes;
 
-    @Column(name = "contacts_cles", columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT")
     private String contactsCles;
 
     @Column(columnDefinition = "TEXT")
@@ -44,9 +42,4 @@ public class PassationProjet {
 
     @Column(columnDefinition = "TEXT")
     private String risques;
-
-    @PrePersist
-    protected void onCreate() {
-        if (pourcentagePassation == null) pourcentagePassation = 0;
-    }
 }

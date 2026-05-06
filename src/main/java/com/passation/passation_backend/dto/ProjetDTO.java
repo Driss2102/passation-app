@@ -1,12 +1,15 @@
 package com.passation.passation_backend.dto;
 
 import com.passation.passation_backend.model.StatutProjet;
-import lombok.Data;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class ProjetDTO {
     private Long id;
     private String nom;

@@ -6,15 +6,20 @@ import com.passation.passation_backend.dto.PassationDTO;
 import com.passation.passation_backend.dto.PassationProjetDTO;
 import com.passation.passation_backend.model.NiveauMaitrise;
 import com.passation.passation_backend.model.StatutPassation;
+import com.passation.passation_backend.repository.PassationRepository;
 import com.passation.passation_backend.service.PassationService;
+import com.passation.passation_backend.service.RiskScoreService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/passations")
@@ -22,6 +27,8 @@ import java.util.Map;
 public class PassationController {
 
     private final PassationService passationService;
+    private final PassationRepository passationRepository;
+    private final RiskScoreService riskScoreService;
 
     @GetMapping
     public ResponseEntity<List<PassationDTO>> getAllPassations() {
@@ -67,5 +74,29 @@ public class PassationController {
     @GetMapping("/stats/dashboard")
     public ResponseEntity<DashboardStatsDTO> getDashboardStats() {
         return ResponseEntity.ok(passationService.getDashboardStats());
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<PassationDTO>> searchPassations(
+            @RequestParam(required = false) String nomEmploye,
+            @RequestParam(required = false) String departement,
+            @RequestParam(required = false) StatutPassation statut,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateMin,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateMax,
+            @RequestParam(required = false) String scoreRisque) {
+
+        List<PassationDTO> results = passationRepository
+                .searchPassations(nomEmploye, departement, statut, dateMin, dateMax)
+                .stream()
+                .map(passationService::toDTO)
+                .collect(Collectors.toList());
+
+        if (scoreRisque != null && !scoreRisque.isBlank()) {
+            results = results.stream()
+                    .filter(dto -> scoreRisque.equalsIgnoreCase(riskScoreService.calculateRiskScore(dto.getId())))
+                    .collect(Collectors.toList());
+        }
+
+        return ResponseEntity.ok(results);
     }
 }

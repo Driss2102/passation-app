@@ -1,0 +1,321 @@
+{
+  "info": {
+    "name": "Passation API",
+    "description": "Collection Postman pour tester tous les endpoints de l'API Passation",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:9090" },
+    { "key": "token", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/auth/login",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"alice.martin@example.com\",\n  \"password\": \"password123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login Manager",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/auth/login",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"bob.dupont@example.com\",\n  \"password\": \"password123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login Admin",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/auth/login",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"password123\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/users",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        },
+        {
+          "name": "Get User by ID",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/users/1",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        },
+        {
+          "name": "Get Users by Role",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/users/role/EMPLOYE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        },
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/users",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nom\": \"Test\",\n  \"prenom\": \"User\",\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\",\n  \"role\": \"EMPLOYE\",\n  \"departement\": \"IT\",\n  \"poste\": \"Dev\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Projets",
+      "item": [
+        {
+          "name": "Get All Projets",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/projets",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        },
+        {
+          "name": "Create Projet",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/projets",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nom\": \"Nouveau Projet\",\n  \"description\": \"Description du projet\",\n  \"statut\": \"EN_COURS\",\n  \"pourcentageAvancement\": 0,\n  \"dateDebut\": \"2026-05-01\",\n  \"dateFinPrevue\": \"2026-12-31\",\n  \"responsableId\": 1\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Passations",
+      "item": [
+        {
+          "name": "Get All Passations",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/passations",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        },
+        {
+          "name": "Get Passation by ID",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/passations/1",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        },
+        {
+          "name": "Dashboard Stats",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/passations/stats/dashboard",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        },
+        {
+          "name": "Search Passations",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/passations/search?statut=EN_COURS",
+              "query": [
+                { "key": "nomEmploye", "value": "", "disabled": true },
+                { "key": "departement", "value": "", "disabled": true },
+                { "key": "statut", "value": "EN_COURS" },
+                { "key": "scoreRisque", "value": "", "disabled": true }
+              ]
+            },
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        },
+        {
+          "name": "Risk Score",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/passations/1/risk-score",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        },
+        {
+          "name": "Create Passation",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/passations",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"employePartantId\": 1,\n  \"remplacantId\": 3,\n  \"managerId\": 2,\n  \"dateDepart\": \"2026-06-30\",\n  \"notes\": \"Passation test\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Statut",
+          "request": {
+            "method": "PUT",
+            "url": "{{base_url}}/api/passations/1/statut",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"statut\": \"EN_COURS\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Alertes",
+      "item": [
+        {
+          "name": "Get All Alertes",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/alertes",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        },
+        {
+          "name": "Get Alertes Non Lues",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/alertes/non-lues",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        },
+        {
+          "name": "Marquer Lue",
+          "request": {
+            "method": "PUT",
+            "url": "{{base_url}}/api/alertes/1/lu",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        },
+        {
+          "name": "Generate Alertes",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/alertes/generate/1",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Checklist",
+      "item": [
+        {
+          "name": "Get Templates",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/checklists",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        },
+        {
+          "name": "Get Items by Template",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/checklists/1/items",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Timeline",
+      "item": [
+        {
+          "name": "Get Timeline by Passation",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/timeline/passation/1",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Commentaires",
+      "item": [
+        {
+          "name": "Get by Passation",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/commentaires/passation/1",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        },
+        {
+          "name": "Create Commentaire",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/commentaires",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"passationId\": 1,\n  \"auteurId\": 2,\n  \"projetId\": 1,\n  \"contenu\": \"Commentaire de test\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "PDF",
+      "item": [
+        {
+          "name": "Download Rapport PDF",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/pdf/passation/1",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        }
+      ]
+    }
+  ]
+}

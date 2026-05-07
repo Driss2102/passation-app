@@ -1,0 +1,7 @@
+target/
+.git/
+*.log
+backend.log
+.idea/
+*.iml
+.mvn/

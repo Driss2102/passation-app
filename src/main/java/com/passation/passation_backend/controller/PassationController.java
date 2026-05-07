@@ -76,6 +76,11 @@ public class PassationController {
         return ResponseEntity.ok(passationService.getDashboardStats());
     }
 
+    @GetMapping("/{id}/risk-score")
+    public ResponseEntity<Map<String, Object>> getRiskScore(@PathVariable Long id) {
+        return ResponseEntity.ok(riskScoreService.getRiskScoreDetails(id));
+    }
+
     @GetMapping("/search")
     public ResponseEntity<List<PassationDTO>> searchPassations(
             @RequestParam(required = false) String nomEmploye,

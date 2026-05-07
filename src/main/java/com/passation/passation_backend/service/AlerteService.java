@@ -1,5 +1,6 @@
 package com.passation.passation_backend.service;
 
+import com.passation.passation_backend.dto.AlerteDTO;
 import com.passation.passation_backend.model.*;
 import com.passation.passation_backend.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -22,28 +23,28 @@ public class AlerteService {
     private final PassationProjetRepository passationProjetRepository;
     private final TimelineEtapeRepository timelineEtapeRepository;
 
-    public List<Alerte> findAll() {
-        return alerteRepository.findAll();
+    public List<AlerteDTO> findAll() {
+        return alerteRepository.findAll().stream().map(this::toDTO).collect(Collectors.toList());
     }
 
-    public List<Alerte> findNonLues() {
-        return alerteRepository.findByLuFalse();
+    public List<AlerteDTO> findNonLues() {
+        return alerteRepository.findByLuFalse().stream().map(this::toDTO).collect(Collectors.toList());
     }
 
     @Transactional
-    public Alerte marquerLue(Long alerteId) {
+    public AlerteDTO marquerLue(Long alerteId) {
         Alerte alerte = alerteRepository.findById(alerteId)
                 .orElseThrow(() -> new RuntimeException("Alerte not found: " + alerteId));
         alerte.setLu(true);
-        return alerteRepository.save(alerte);
+        return toDTO(alerteRepository.save(alerte));
     }
 
-    public List<Alerte> findByPassation(Long passationId) {
-        return alerteRepository.findByPassationId(passationId);
+    public List<AlerteDTO> findByPassation(Long passationId) {
+        return alerteRepository.findByPassationId(passationId).stream().map(this::toDTO).collect(Collectors.toList());
     }
 
     @Transactional
-    public List<Alerte> generateAlertesForPassation(Long passationId) {
+    public List<AlerteDTO> generateAlertesForPassation(Long passationId) {
         Passation passation = passationRepository.findById(passationId)
                 .orElseThrow(() -> new RuntimeException("Passation not found: " + passationId));
 
@@ -78,7 +79,6 @@ public class AlerteService {
                     && pp.getProjet().getStatut() == StatutProjet.EN_COURS) {
                 String type = "REMPLACANT_INSUFFISANT";
                 String message = "Remplaçant insuffisant sur projet en cours: " + pp.getProjet().getNom();
-                // Check by type+message to avoid strict duplicate per project
                 boolean alreadyExists = existing.stream()
                         .anyMatch(a -> type.equals(a.getType()) && message.equals(a.getMessage()));
                 if (!alreadyExists) {
@@ -123,7 +123,7 @@ public class AlerteService {
         if (!nouvelles.isEmpty()) {
             alerteRepository.saveAll(nouvelles);
         }
-        return nouvelles;
+        return nouvelles.stream().map(this::toDTO).collect(Collectors.toList());
     }
 
     private Alerte buildAlerte(Passation passation, String type, String message, NiveauSeverite severite) {
@@ -133,6 +133,18 @@ public class AlerteService {
                 .message(message)
                 .niveauSeverite(severite)
                 .lu(false)
+                .build();
+    }
+
+    public AlerteDTO toDTO(Alerte a) {
+        return AlerteDTO.builder()
+                .id(a.getId())
+                .passationId(a.getPassation() != null ? a.getPassation().getId() : null)
+                .type(a.getType())
+                .message(a.getMessage())
+                .niveauSeverite(a.getNiveauSeverite())
+                .dateCreation(a.getDateCreation())
+                .lu(a.getLu())
                 .build();
     }
 }

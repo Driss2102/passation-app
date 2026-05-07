@@ -135,6 +135,10 @@ public class PassationService {
 
     public PassationDTO toDTO(Passation passation) {
         if (passation == null) return null;
+        List<PassationProjetDTO> projets = passationProjetRepository.findByPassationId(passation.getId())
+                .stream()
+                .map(this::toPassationProjetDTO)
+                .collect(Collectors.toList());
         return PassationDTO.builder()
                 .id(passation.getId())
                 .employePartant(userService.toDTO(passation.getEmployePartant()))
@@ -145,6 +149,7 @@ public class PassationService {
                 .pourcentageGlobal(passation.getPourcentageGlobal())
                 .notes(passation.getNotes())
                 .dateCreation(passation.getDateCreation())
+                .passationProjets(projets)
                 .build();
     }
 

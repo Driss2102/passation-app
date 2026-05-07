@@ -31,7 +31,8 @@ public class DataInitializer implements CommandLineRunner {
     public void run(String... args) throws Exception {
         if (userRepository.count() > 0) return;
 
-        String encodedPassword = passwordEncoder.encode("password123");
+        String encodedPassword = passwordEncoder.encode("" +
+                "");
 
         // ---- Users ----
         User alice = userRepository.save(User.builder()

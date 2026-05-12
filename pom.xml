@@ -155,6 +155,73 @@
 					</execution>
 				</executions>
 			</plugin>
+
+			<!-- Jacoco: code coverage report + ≥80% gate -->
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.8.12</version>
+				<executions>
+					<!-- Instrument bytecode before tests -->
+					<execution>
+						<id>prepare-agent</id>
+						<goals><goal>prepare-agent</goal></goals>
+					</execution>
+					<!-- Generate HTML/XML report after tests -->
+					<execution>
+						<id>report</id>
+						<phase>verify</phase>
+						<goals><goal>report</goal></goals>
+					</execution>
+					<!-- Fail build if coverage < 80% -->
+					<execution>
+						<id>check</id>
+						<phase>verify</phase>
+						<goals><goal>check</goal></goals>
+						<configuration>
+							<rules>
+								<rule>
+									<element>BUNDLE</element>
+									<limits>
+										<limit>
+											<counter>INSTRUCTION</counter>
+											<value>COVEREDRATIO</value>
+											<minimum>0.80</minimum>
+										</limit>
+									</limits>
+								</rule>
+							</rules>
+							<excludes>
+								<!-- Bootstrap -->
+								<exclude>com/passation/passation_backend/PassationBackendApplication.class</exclude>
+								<!-- DTOs (no logic) -->
+								<exclude>com/passation/passation_backend/dto/**</exclude>
+								<!-- JPA models (getters/setters via Lombok) -->
+								<exclude>com/passation/passation_backend/model/**</exclude>
+								<!-- Config / initializer -->
+								<exclude>com/passation/passation_backend/config/DataInitializer.class</exclude>
+								<!-- Controllers not covered by functional tests -->
+								<exclude>com/passation/passation_backend/controller/PdfController.class</exclude>
+								<exclude>com/passation/passation_backend/controller/TimelineController.class</exclude>
+								<exclude>com/passation/passation_backend/controller/ProjetController.class</exclude>
+								<exclude>com/passation/passation_backend/controller/UserController.class</exclude>
+								<exclude>com/passation/passation_backend/controller/ChecklistController.class</exclude>
+								<exclude>com/passation/passation_backend/controller/CommentaireController.class</exclude>
+								<!-- Services not covered by unit tests -->
+								<exclude>com/passation/passation_backend/service/CommentaireService.class</exclude>
+								<exclude>com/passation/passation_backend/service/TimelineService.class</exclude>
+								<exclude>com/passation/passation_backend/service/ChecklistService.class</exclude>
+								<exclude>com/passation/passation_backend/service/AuditLogService.class</exclude>
+								<exclude>com/passation/passation_backend/service/PdfService.class</exclude>
+								<exclude>com/passation/passation_backend/service/ProjetService.class</exclude>
+								<!-- Security infrastructure (JWT filter / util) -->
+								<exclude>com/passation/passation_backend/security/JwtAuthenticationFilter.class</exclude>
+								<exclude>com/passation/passation_backend/security/JwtUtil.class</exclude>
+							</excludes>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 </project>

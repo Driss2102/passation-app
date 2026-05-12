@@ -32,7 +32,14 @@ jobs:
         env:
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
-      - name: Run Tests
-        run: mvn test --no-transfer-progress
+      - name: Run Tests and Check Coverage (Jacoco ≥80%)
+        run: mvn verify --no-transfer-progress
         env:
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
+
+      - name: Upload Jacoco coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-report
+          path: target/site/jacoco/

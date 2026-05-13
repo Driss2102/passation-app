@@ -42,14 +42,9 @@ jobs:
         env:
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
-      - name: Run Tests and Check Coverage (Jacoco ≥80%)
-        run: mvn verify --no-transfer-progress
-        env:
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
-
-      - name: SonarCloud Analysis
+      - name: Tests + Jacoco coverage (≥80%) + SonarCloud Analysis
         run: |
-          mvn sonar:sonar --no-transfer-progress \
+          mvn verify sonar:sonar --no-transfer-progress \
             -Dsonar.projectKey=Driss2102_passation-app \
             -Dsonar.organization=driss2102 \
             -Dsonar.host.url=https://sonarcloud.io \

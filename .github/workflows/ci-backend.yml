@@ -13,6 +13,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          # Full history needed by SonarCloud for blame / new-code detection
+          fetch-depth: 0
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
@@ -27,14 +30,43 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
 
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+
       - name: Build with Maven
         run: mvn clean compile --no-transfer-progress
         env:
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
-      - name: Run Tests and Check Coverage (Jacoco ≥80%)
+      - name: Tests + Jacoco coverage (≥80%)
         run: mvn verify --no-transfer-progress
         env:
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+
+      - name: Verify Jacoco XML report exists
+        run: |
+          echo "=== Jacoco XML report ==="
+          ls -la target/site/jacoco/jacoco.xml && echo "✅ jacoco.xml found" || echo "❌ jacoco.xml NOT found"
+
+      - name: SonarCloud Analysis
+        run: |
+          mvn sonar:sonar --no-transfer-progress \
+            -Dsonar.projectKey=Driss2102_passation-app \
+            -Dsonar.organization=driss2102 \
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.coverage.jacoco.xmlReportPaths=$(pwd)/target/site/jacoco/jacoco.xml
+          echo ""
+          echo "=========================================="
+          echo "  SonarCloud report:"
+          echo "  https://sonarcloud.io/dashboard?id=Driss2102_passation-app"
+          echo "=========================================="
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
       - name: Upload Jacoco coverage report

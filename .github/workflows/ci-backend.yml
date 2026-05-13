@@ -42,13 +42,23 @@ jobs:
         env:
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
-      - name: Tests + Jacoco coverage (≥80%) + SonarCloud Analysis
+      - name: Tests + Jacoco coverage (≥80%)
+        run: mvn verify --no-transfer-progress
+        env:
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+
+      - name: Verify Jacoco XML report exists
         run: |
-          mvn verify sonar:sonar --no-transfer-progress \
+          echo "=== Jacoco XML report ==="
+          ls -la target/site/jacoco/jacoco.xml && echo "✅ jacoco.xml found" || echo "❌ jacoco.xml NOT found"
+
+      - name: SonarCloud Analysis
+        run: |
+          mvn sonar:sonar --no-transfer-progress \
             -Dsonar.projectKey=Driss2102_passation-app \
             -Dsonar.organization=driss2102 \
             -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
+            -Dsonar.coverage.jacoco.xmlReportPaths=$(pwd)/target/site/jacoco/jacoco.xml
           echo ""
           echo "=========================================="
           echo "  SonarCloud report:"

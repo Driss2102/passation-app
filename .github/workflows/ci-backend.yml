@@ -115,29 +115,20 @@ jobs:
         env:
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
-      - name: Configure Maven settings for Cloudsmith
-        run: |
-          mkdir -p ~/.m2
-          cat > ~/.m2/settings.xml <<EOF
-          <settings>
-            <servers>
-              <server>
-                <id>cloudsmith-passation</id>
-                <username>token</username>
-                <password>${{ secrets.CLOUDSMITH_API_KEY }}</password>
-              </server>
-            </servers>
-          </settings>
-          EOF
+      - name: Install Cloudsmith CLI
+        run: pip install --upgrade cloudsmith-cli
 
       - name: Deploy JAR to Cloudsmith
         run: |
-          mvn deploy -DskipTests --no-transfer-progress
+          JAR_FILE="target/passation-backend-${{ env.VERSION }}.jar"
+          echo "Deploying: $JAR_FILE"
+          cloudsmith push maven ci-cd-55oy/passation-backend \
+            "$JAR_FILE" \
+            --pom-file=pom.xml \
+            --api-key=${{ secrets.CLOUDSMITH_API_KEY }}
           echo ""
           echo "=========================================="
           echo "  ✅ Artifact deployed to Cloudsmith!"
           echo "  Version: ${{ env.VERSION }}"
           echo "  Repo: https://cloudsmith.io/~ci-cd-55oy/repos/passation-backend/packages/"
           echo "=========================================="
-        env:
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}

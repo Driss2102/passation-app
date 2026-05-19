@@ -116,6 +116,19 @@
 		</dependency>
 	</dependencies>
 
+	<distributionManagement>
+		<repository>
+			<id>cloudsmith-passation</id>
+			<name>Cloudsmith passation-backend releases</name>
+			<url>https://maven.cloudsmith.io/ci-cd-55oy/passation-backend/</url>
+		</repository>
+		<snapshotRepository>
+			<id>cloudsmith-passation</id>
+			<name>Cloudsmith passation-backend snapshots</name>
+			<url>https://maven.cloudsmith.io/ci-cd-55oy/passation-backend/</url>
+		</snapshotRepository>
+	</distributionManagement>
+
 	<build>
 		<plugins>
 			<plugin>

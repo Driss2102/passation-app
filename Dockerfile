@@ -18,4 +18,5 @@ COPY --from=build /app/target/*.jar app.jar
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-Dspring.profiles.active=prod", "-jar", "app.jar"]
+# Shell form pour que ${SPRING_PROFILES_ACTIVE} soit résolu au runtime
+ENTRYPOINT ["sh", "-c", "java -Dspring.profiles.active=${SPRING_PROFILES_ACTIVE:-prod} -jar app.jar"]

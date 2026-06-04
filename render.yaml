@@ -1,0 +1,60 @@
+services:
+
+  # ── DEV ─────────────────────────────────────────
+  - type: web
+    name: passation-dev
+    env: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    branch: main
+    autoDeploy: false
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: dev
+      - key: JWT_SECRET
+        sync: false
+
+  # ── HOMOL ────────────────────────────────────────
+  - type: web
+    name: passation-homol
+    env: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    branch: master
+    autoDeploy: false
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: homol
+      - key: JWT_SECRET
+        sync: false
+      - key: PGHOST_HOMOL
+        sync: false
+      - key: PGUSER_HOMOL
+        sync: false
+      - key: PGPASSWORD_HOMOL
+        sync: false
+
+  # ── PROD ─────────────────────────────────────────
+  - type: web
+    name: passation-prod
+    env: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    branch: master
+    autoDeploy: false
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: JWT_SECRET
+        sync: false
+      - key: PGHOST
+        sync: false
+      - key: PGUSER
+        sync: false
+      - key: PGPASSWORD
+        sync: false
+      - key: FRONTEND_URL
+        sync: false

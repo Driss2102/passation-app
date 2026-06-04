@@ -18,4 +18,5 @@ COPY --from=build /app/target/*.jar app.jar
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-Dspring.profiles.active=prod", "-jar", "app.jar"]
+# SPRING_PROFILES_ACTIVE est défini par Render via envVars (dev/homol/prod)
+ENTRYPOINT ["java", "-jar", "app.jar"]

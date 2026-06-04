@@ -3,30 +3,30 @@ services:
   # ── DEV ─────────────────────────────────────────
   - type: web
     name: passation-dev
-    runtime: java
+    env: docker
+    dockerfilePath: ./Dockerfile
     plan: free
     branch: main
     autoDeploy: false
-    buildCommand: mvn clean package -DskipTests --no-transfer-progress
-    startCommand: java -Dspring.profiles.active=dev -jar target/passation-backend.jar
     healthCheckPath: /actuator/health
     envVars:
-      - key: JWT_SECRET
-        sync: false
       - key: SPRING_PROFILES_ACTIVE
         value: dev
+      - key: JWT_SECRET
+        sync: false
 
   # ── HOMOL ────────────────────────────────────────
   - type: web
     name: passation-homol
-    runtime: java
+    env: docker
+    dockerfilePath: ./Dockerfile
     plan: free
     branch: master
     autoDeploy: false
-    buildCommand: mvn clean package -DskipTests --no-transfer-progress
-    startCommand: java -Dspring.profiles.active=homol -jar target/passation-backend.jar
     healthCheckPath: /actuator/health
     envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: homol
       - key: JWT_SECRET
         sync: false
       - key: PGHOST_HOMOL
@@ -35,20 +35,19 @@ services:
         sync: false
       - key: PGPASSWORD_HOMOL
         sync: false
-      - key: SPRING_PROFILES_ACTIVE
-        value: homol
 
   # ── PROD ─────────────────────────────────────────
   - type: web
     name: passation-prod
-    runtime: java
+    env: docker
+    dockerfilePath: ./Dockerfile
     plan: free
     branch: master
     autoDeploy: false
-    buildCommand: mvn clean package -DskipTests --no-transfer-progress
-    startCommand: java -Dspring.profiles.active=prod -jar target/passation-backend.jar
     healthCheckPath: /actuator/health
     envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
       - key: JWT_SECRET
         sync: false
       - key: PGHOST
@@ -59,5 +58,3 @@ services:
         sync: false
       - key: FRONTEND_URL
         sync: false
-      - key: SPRING_PROFILES_ACTIVE
-        value: prod

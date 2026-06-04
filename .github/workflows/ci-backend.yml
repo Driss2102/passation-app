@@ -172,6 +172,15 @@ jobs:
         env:
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
+      - name: Create Git tag
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git tag "v${{ env.RELEASE_VERSION }}"
+          git push origin "v${{ env.RELEASE_VERSION }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Deploy RELEASE → Cloudsmith
         run: |
           pip install --upgrade cloudsmith-cli -q
@@ -185,15 +194,6 @@ jobs:
           echo "  Version : ${{ env.RELEASE_VERSION }}"
           echo "  Repo    : https://cloudsmith.io/~ci-cd-55oy/repos/passation-backend/packages/"
           echo "=========================================="
-
-      - name: Create Git tag
-        run: |
-          git config user.name "github-actions"
-          git config user.email "actions@github.com"
-          git tag "v${{ env.RELEASE_VERSION }}"
-          git push origin "v${{ env.RELEASE_VERSION }}"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Deploy → Render HOMOL
         run: |

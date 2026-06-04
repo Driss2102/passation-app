@@ -1,0 +1,63 @@
+services:
+
+  # ── DEV ─────────────────────────────────────────
+  - type: web
+    name: passation-dev
+    runtime: java
+    plan: free
+    branch: main
+    autoDeploy: false
+    buildCommand: mvn clean package -DskipTests --no-transfer-progress
+    startCommand: java -Dspring.profiles.active=dev -jar target/passation-backend.jar
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: JWT_SECRET
+        sync: false
+      - key: SPRING_PROFILES_ACTIVE
+        value: dev
+
+  # ── HOMOL ────────────────────────────────────────
+  - type: web
+    name: passation-homol
+    runtime: java
+    plan: free
+    branch: master
+    autoDeploy: false
+    buildCommand: mvn clean package -DskipTests --no-transfer-progress
+    startCommand: java -Dspring.profiles.active=homol -jar target/passation-backend.jar
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: JWT_SECRET
+        sync: false
+      - key: PGHOST_HOMOL
+        sync: false
+      - key: PGUSER_HOMOL
+        sync: false
+      - key: PGPASSWORD_HOMOL
+        sync: false
+      - key: SPRING_PROFILES_ACTIVE
+        value: homol
+
+  # ── PROD ─────────────────────────────────────────
+  - type: web
+    name: passation-prod
+    runtime: java
+    plan: free
+    branch: master
+    autoDeploy: false
+    buildCommand: mvn clean package -DskipTests --no-transfer-progress
+    startCommand: java -Dspring.profiles.active=prod -jar target/passation-backend.jar
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: JWT_SECRET
+        sync: false
+      - key: PGHOST
+        sync: false
+      - key: PGUSER
+        sync: false
+      - key: PGPASSWORD
+        sync: false
+      - key: FRONTEND_URL
+        sync: false
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod

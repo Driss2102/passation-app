@@ -126,3 +126,4 @@ src/main/java/com/passation/passation_backend/
 | REMPLACANT | Passations où il est remplaçant |
 | MANAGER_RH | Toutes les passations + dashboard complet |
 | ADMIN | Accès total + gestion utilisateurs |
+
